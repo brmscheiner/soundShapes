@@ -61,27 +61,45 @@ void soundSide(float x1, float y1, float x2, float y2, float angle, float jiggle
    distortion = jiggle * ((float(bt)/4)*spec[i] + (float(4-bt)/4)*prevSpec[i]);
    xdistortion = cos(angle)*distortion;
    ydistortion = sqrt(sq(distortion)-sq(xdistortion));
-//   println(xdistortion);
-//   println(ydistortion);
-//   println(distortion);
    if (angle<=PI) {
      ydistortion *= -1;
    }
    x = x1 + ratio * (x2-x1) + xdistortion;
    y = y1 + ratio * (y2-y1) + ydistortion;
-   curveVertex(x,y);
-//   vertex(x,y);
+//   curveVertex(x,y); // not noticing much of a difference from vertex(), visually.
+   vertex(x,y);
  }
 }
 
 void soundRect(float x, float y, float w, float h, float jiggle) {
- /* TO DO: CORNER ADJUSTMENTS */
+ /* TO DO: CORNER DISTORTIONS */
  beginShape();
  soundSide(x,y,x+w,y,PI/2,jiggle); // top
  soundSide(x+w,y,x+w,y+h,0,jiggle); // right
  soundSide(x+w,y+h,x,y+h,3*PI/2,jiggle); // bottom
  soundSide(x,y+h,x,y,PI,jiggle); //left
  endShape();
+}
+
+void soundPolygon(float[] coordinates, float jiggle) {
+  float x;
+  float y;
+  if (coordinates.length % 2 == 1) {
+    println("Error: unmatched x coordinates (input array contains an odd number of elements)");
+    println("Usage: soundPolygon([x1,y1,x2,y2,x3,y3,...],jiggle)");
+  }
+  else if (coordinates.length < 6) {
+    println("Error: not enough coordinates to construct polygon (need at least 3)");
+    println("Usage: soundPolygon([x1,y1,x2,y2,x3,y3,...],jiggle)");
+  }
+  else {
+    beginShape();
+    for (int i=0;i<coordinates.length-2;i+=2) {
+      soundSide(coordinates[i],coordinates[i+1],coordinates[i+2],coordinates[i+3],0,jiggle);
+    }
+    soundSide(coordinates[-2],coordinates[-1],coordinates[0],coordinates[1],0,jiggle);
+    endShape();
+  }
 }
 
 //void soundEllipse(float x, float y, float rx, float ry, float jiggle) {

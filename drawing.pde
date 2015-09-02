@@ -34,6 +34,9 @@ void draw() {
     fill(100,200,200);
     soundRect(300,500,75,100,100);
     soundRect(500,500,75,100,100);
+    fill(255);
+    float[] coordinates = {20,20,50,50,100,20};
+    soundPolygon(coordinates,100);
   }
 }
 
