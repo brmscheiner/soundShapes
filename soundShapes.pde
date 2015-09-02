@@ -45,46 +45,42 @@ void updateParams() {
  }
 }
 
-void soundSide(float x1, float y1, float x2, float y2, float jiggle, String direction) {
+void soundSide(float x1, float y1, float x2, float y2, float angle, float jiggle) {
  /* Constructs a sound-distorted side from (x1,y1) to (x2,y2).
-    Distortion will be based on the magnitude of jiggle.
-    Distortion will be in the cardinal direction indicated (a later 
-    version should give direction in radians to increase flexibility)
-    Only for use within a beginShape()--endShape() block. 
+    Distortion will be based on the magnitude of jiggle and in
+    the direction given by angle (in radians).
  */
-// float d = dist(x1,y1,x2,y2);
  float ratio;
  float distortion;
+ float xdistortion;
+ float ydistortion;
  float x;
  float y;
  for (int i=0;i<spec.length;i++) {
    ratio = float(i)/spec.length;
    distortion = jiggle * ((float(bt)/4)*spec[i] + (float(4-bt)/4)*prevSpec[i]);
-   x = x1 + ratio * (x2-x1);
-   y = y1 + ratio * (y2-y1);
-   if (direction=="NORTH") {
-     curveVertex(x,y-distortion);
+   xdistortion = cos(angle)*distortion;
+   ydistortion = sqrt(sq(distortion)-sq(xdistortion));
+//   println(xdistortion);
+//   println(ydistortion);
+//   println(distortion);
+   if (angle<=PI) {
+     ydistortion *= -1;
    }
-   else if (direction=="SOUTH") {
-     curveVertex(x,y+distortion);
-   }
-   else if (direction=="EAST") {
-     curveVertex(x+distortion,y);
-   }
-   else if (direction=="WEST") {
-     curveVertex(x-distortion,y);
-   }
-
+   x = x1 + ratio * (x2-x1) + xdistortion;
+   y = y1 + ratio * (y2-y1) + ydistortion;
+   curveVertex(x,y);
+//   vertex(x,y);
  }
 }
 
 void soundRect(float x, float y, float w, float h, float jiggle) {
  /* TO DO: CORNER ADJUSTMENTS */
  beginShape();
- soundSide(x,y,x+w,y,jiggle,"NORTH");
- soundSide(x+w,y,x+w,y+h,jiggle,"EAST");
- soundSide(x+w,y+h,x,y+h,jiggle,"SOUTH");
- soundSide(x,y+h,x,y,jiggle,"WEST");
+ soundSide(x,y,x+w,y,PI/2,jiggle); // top
+ soundSide(x+w,y,x+w,y+h,0,jiggle); // right
+ soundSide(x+w,y+h,x,y+h,3*PI/2,jiggle); // bottom
+ soundSide(x,y+h,x,y,PI,jiggle); //left
  endShape();
 }
 

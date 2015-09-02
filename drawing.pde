@@ -29,7 +29,7 @@ void draw() {
     background(0);
     fill(255);
     soundRect(350,50,100,100,100);
-    fill(200,0,0,100);
+    fill(200,0,0,30);
     soundRect(275,150,250,350,300);
     fill(100,200,200);
     soundRect(300,500,75,100,100);
