@@ -56,6 +56,7 @@ void soundSide(float x1, float y1, float x2, float y2, float angle, float jiggle
  float ydistortion;
  float x;
  float y;
+ 
  for (int i=0;i<spec.length;i++) {
    ratio = float(i)/spec.length;
    distortion = jiggle * ((float(bt)/4)*spec[i] + (float(4-bt)/4)*prevSpec[i]);
@@ -73,17 +74,17 @@ void soundSide(float x1, float y1, float x2, float y2, float angle, float jiggle
 
 void soundRect(float x, float y, float w, float h, float jiggle) {
  /* TO DO: CORNER DISTORTIONS */
+// beginShape(TRIANGLE_FAN);
  beginShape();
  soundSide(x,y,x+w,y,PI/2,jiggle); // top
  soundSide(x+w,y,x+w,y+h,0,jiggle); // right
  soundSide(x+w,y+h,x,y+h,3*PI/2,jiggle); // bottom
  soundSide(x,y+h,x,y,PI,jiggle); //left
- endShape();
+ endShape(CLOSE);
 }
 
 void soundPolygon(float[] coordinates, float jiggle) {
-  float x;
-  float y;
+  float angle;
   if (coordinates.length % 2 == 1) {
     println("Error: unmatched x coordinates (input array contains an odd number of elements)");
     println("Usage: soundPolygon([x1,y1,x2,y2,x3,y3,...],jiggle)");
@@ -97,31 +98,43 @@ void soundPolygon(float[] coordinates, float jiggle) {
     for (int i=0;i<coordinates.length-2;i+=2) {
       soundSide(coordinates[i],coordinates[i+1],coordinates[i+2],coordinates[i+3],0,jiggle);
     }
-    soundSide(coordinates[-2],coordinates[-1],coordinates[0],coordinates[1],0,jiggle);
-    endShape();
+    endShape(CLOSE);
   }
 }
 
-//void soundEllipse(float x, float y, float rx, float ry, float jiggle) {
-   //float r = 5+8*power;
-   //beginShape();
-   //curveVertex(180,0);
-   //int ct = max(min(4,t),0);
-   //float r_distorted = r+(prevSpec[prevSpec.length-1]*(4-ct)/4 + spec[spec.length-1]*ct/4)*400;
-   //float theta = 0;
-   //float y = r_distorted*sin(theta); 
-   //float x = sqrt(pow(r_distorted,2)-pow(y,2));
-   //curveVertex(x,y);
-   //for (int i=1;i<spec.length;i++) {
-   //  r_distorted = r+(prevSpec[i]*(4-ct)/4 + spec[i]*ct/4)*400;
-   //  theta = 2*(i+1)*PI/spec.length;
-   //  y = r_distorted*sin(theta); 
-   //  x = sqrt(pow(r_distorted,2)-pow(y,2));
-   //  if (theta>PI/2 && theta<3*PI/2) {
-   //    x = -x; // +- sqrt adjustment
-   //  }
-   //  curveVertex(x,y);
-   //}
-   //curveVertex(128,0);
-   //endShape();
+void soundBird(float x, float y, float w) {
+  float h = w/10 - (4-bt)*w/40;
+  noFill();
+  bezier(x-w/2,y,x-w*9/24,y-h,x-w*3/24,y-h,x,y);
+  bezier(x,y,x+w*3/24,y-h,x+w*9/24,y-h,x+w/2,y);
+}
+//
+//void soundEllipse(float x, float y, float w, float h, float jiggle) {
+//  float distortion;
+//  float r;
+//  float theta = 0;
+//  beginShape();
+//  float y = r_distorted*sin(theta); 
+//  float x = sqrt(sq(r_distorted)-sq(y));
+//  vertex(180,0);
+//  vertex(x,y);
+//  for (int i=1;i<spec.length;i++) {
+//    theta = 2*(i+1)*PI/spec.length;
+//    r = 
+//    distortion = jiggle * ((float(bt)/4)*spec[i] + (float(4-bt)/4)*prevSpec[i]);
+//    xdistortion = cos(angle)*distortion;
+//    ydistortion = sqrt(sq(distortion)-sq(xdistortion));
+//    if (angle<=PI) {
+//      ydistortion *= -1;
+//    }
+//    
+//    y = r_distorted*sin(theta); 
+//    x = sqrt(sq(r_distorted)-sq(y));
+//    if (theta>PI/2 && theta<3*PI/2) {
+//      x = -x; // +- sqrt adjustment
+//    }
+//    curveVertex(x,y);
+//  }
+//  curveVertex(128,0);
+//  endShape();
 //}
