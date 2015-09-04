@@ -12,6 +12,32 @@ float arrayAverage(float[] input) {
  return sum/input.length;
 }
 
+float[] arrayEvens(float[] input) {
+  float[] output = new float[input.length/2];
+  int j = 0;
+  for (int i=0; i<input.length; i++) {
+    if (i%2==0) {
+      output[j] = input[i];
+      j++;
+    }
+  }
+  return output;
+}
+
+
+float[] arrayOdds(float[] input) {
+  float[] output = new float[input.length/2];
+  int j = 0;
+  for (int i=0; i<input.length; i++) {
+    if (i%2==1) {
+      output[j] = input[i];
+      j++;
+    }
+  }
+  return output;
+}
+
+
 void flattenSpec() {
  for (int i=0;i<15;i++) {
    spec[i] = spec[i]/(1+(0.035*(15-i)));
@@ -83,8 +109,34 @@ void soundRect(float x, float y, float w, float h, float jiggle) {
  endShape(CLOSE);
 }
 
+float calculateDistortionAngle(float[] center, float x1, float y1, float x2, float y2) {
+  float angle;
+  float theta;
+  float midx;
+  float midy;
+  theta = atan(abs(x1-x2)/abs(y1-y2));
+  midx = (x1+x2)/2;
+  midy = (y1+y2)/2;
+  if ((midx>center[0]) && (midy>center[1])) {
+    angle = theta;
+  } else if ((midx<=center[0]) && (midy>center[1])) {
+    angle = theta + PI/2;
+  } else if ((midx<=center[0]) && (midy<=center[1])) {
+    angle = theta + PI;
+  } else if ((midx>center[0]) && (midy<=center[1])) {
+    angle = theta + 3*PI/2;
+  }
+  else {
+    println(center);
+    println(midx);
+    println(midy);
+  }
+  return theta;
+}
+
 void soundPolygon(float[] coordinates, float jiggle) {
   float angle;
+  float center[] = new float[2];
   if (coordinates.length % 2 == 1) {
     println("Error: unmatched x coordinates (input array contains an odd number of elements)");
     println("Usage: soundPolygon([x1,y1,x2,y2,x3,y3,...],jiggle)");
@@ -94,16 +146,21 @@ void soundPolygon(float[] coordinates, float jiggle) {
     println("Usage: soundPolygon([x1,y1,x2,y2,x3,y3,...],jiggle)");
   }
   else {
+    center[0] = arrayAverage(arrayEvens(coordinates));
+    center[1] = arrayAverage(arrayOdds(coordinates));
     beginShape();
     for (int i=0;i<coordinates.length-2;i+=2) {
-      soundSide(coordinates[i],coordinates[i+1],coordinates[i+2],coordinates[i+3],0,jiggle);
+      angle = calculateDistortionAngle(center,coordinates[i],coordinates[i+1],coordinates[i+2],coordinates[i+3]);
+      soundSide(coordinates[i],coordinates[i+1],coordinates[i+2],coordinates[i+3],angle,jiggle);
     }
-    endShape(CLOSE);
+    angle = calculateDistortionAngle(center,coordinates[0],coordinates[1],coordinates[coordinates.length-2],coordinates[coordinates.length-1]);
+    soundSide(coordinates[0],coordinates[1],coordinates[coordinates.length-2],coordinates[coordinates.length-1],angle,jiggle);
+    endShape();
   }
 }
 
 void soundBird(float x, float y, float w) {
-  float h = w/10 - (4-bt)*w/40;
+  float h = w/10 - (4-bt)*w/60;
   noFill();
   bezier(x-w/2,y,x-w*9/24,y-h,x-w*3/24,y-h,x,y);
   bezier(x,y,x+w*3/24,y-h,x+w*9/24,y-h,x+w/2,y);
