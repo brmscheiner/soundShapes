@@ -28,17 +28,19 @@ void draw() {
     /* DRAWINGS GO HERE. */
     background(0);
     strokeWeight(1);
-    stroke(0);
-    fill(255);
-    soundRect(350,50,100,100,100);
-    fill(200,0,0,30);
-    soundRect(275,150,250,350,300);
-    fill(100,200,200);
-    soundRect(300,500,75,100,100);
-    soundRect(500,500,75,100,100);
-    fill(255);
+    stroke(100,100,0);
+//    fill(255);
+//    soundRect(350,50,100,100,100);
+//    fill(200,0,0,30);
+//    soundRect(275,150,250,350,300);
+//    fill(100,200,200);
+//    soundRect(300,500,75,100,100);
+//    soundRect(500,500,75,100,100);
+    fill(255,255,255,100);
     float[] coordinates = {20,120,50,150,100,120};
     soundPolygon(coordinates,100);
+    float[] squarecoordinates = {width/4,height/4,3*width/4,height/4,3*width/4,3*height/4,width/4,3*height/4};
+    soundPolygon(squarecoordinates,0);
     stroke(255);
     strokeWeight(3);
     soundBird(150,200,200);

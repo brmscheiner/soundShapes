@@ -127,11 +127,10 @@ float calculateDistortionAngle(float[] center, float x1, float y1, float x2, flo
     angle = theta + 3*PI/2;
   }
   else {
-    println(center);
-    println(midx);
-    println(midy);
+    angle = theta;
+    println("This should never happen. But code won't compile unless angle is assigned.");
   }
-  return theta;
+  return angle;
 }
 
 void soundPolygon(float[] coordinates, float jiggle) {
@@ -153,8 +152,8 @@ void soundPolygon(float[] coordinates, float jiggle) {
       angle = calculateDistortionAngle(center,coordinates[i],coordinates[i+1],coordinates[i+2],coordinates[i+3]);
       soundSide(coordinates[i],coordinates[i+1],coordinates[i+2],coordinates[i+3],angle,jiggle);
     }
-    angle = calculateDistortionAngle(center,coordinates[0],coordinates[1],coordinates[coordinates.length-2],coordinates[coordinates.length-1]);
-    soundSide(coordinates[0],coordinates[1],coordinates[coordinates.length-2],coordinates[coordinates.length-1],angle,jiggle);
+    angle = calculateDistortionAngle(center,coordinates[coordinates.length-2],coordinates[coordinates.length-1],coordinates[0],coordinates[1]);
+    soundSide(coordinates[coordinates.length-2],coordinates[coordinates.length-1],coordinates[0],coordinates[1],angle,jiggle);
     endShape();
   }
 }
