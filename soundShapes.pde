@@ -118,17 +118,21 @@ float calculateDistortionAngle(float[] center, float x1, float y1, float x2, flo
   midx = (x1+x2)/2;
   midy = (y1+y2)/2;
   if ((midx>center[0]) && (midy>center[1])) {
+    stroke(100,0,0);
+    println("1");
     angle = theta;
   } else if ((midx<=center[0]) && (midy>center[1])) {
+    stroke(0,100,0);
+    println("2");
     angle = theta + PI/2;
   } else if ((midx<=center[0]) && (midy<=center[1])) {
+    stroke(0,0,100);
+    println("3");
     angle = theta + PI;
-  } else if ((midx>center[0]) && (midy<=center[1])) {
-    angle = theta + 3*PI/2;
-  }
-  else {
-    angle = theta;
-    println("This should never happen. But code won't compile unless angle is assigned.");
+  } else {
+    stroke(0,100,100);
+    println("4");
+    angle = theta + 3*PI/2; // if ((midx>center[0]) && (midy<=center[1]))
   }
   return angle;
 }
